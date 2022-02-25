@@ -1,0 +1,42 @@
+{
+    "players": [
+        {
+            "name": "root",
+            "passwd": 12345678,
+            "team": 0
+        },
+        {
+            "name": "John",
+            "passwd": 1,
+            "team": 1
+        },
+        {
+            "name": "Jack",
+            "passwd": 1,
+            "team": 2
+        },
+        {
+            "name": "Daniel",
+            "passwd": 1,
+            "team": 3
+        }
+    ],
+    "team_color": [
+        {
+            "key": 1,
+            "color": "Aqua"
+        },
+        {
+            "key": 2,
+            "color": "green"
+        },
+        {
+            "key": 3,
+            "color": "red"
+        },
+        {
+            "key": 4,
+            "color": "Fuchsia"
+        }
+    ]
+}

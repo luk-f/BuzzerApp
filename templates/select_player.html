@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Identification</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link href="/static/bootstrap.min.css" rel="stylesheet">
+    
+	<!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous"> -->
+</head>
+<body style = "text-align:center;">
+
+{% block header %}
+    <h1>{% block title %}Log In{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+
+    <form class="ui form"  action="/click" method="post">
+    
+        <p><b>Choose a player:</b></p>
+
+        <div>
+            <select name="players" id="player-select">
+                <choix/>
+                <option value="">--Please choose a player--</option>
+                {% for user in user_list %}
+                <option value="{{ user.name }}" required>{{ user.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <p><b>mot de passe :</b></p>
+
+        <div>
+            <input name="passwd" type="tel" required/>
+        </div>
+
+        <p>puis valide</p>
+
+        <!-- <a class="ui blue button" >Go cliquer</a> -->
+        <!-- <input type="button" value="Go cliquer" onClick="show()"> -->
+        <!-- <input type="submit" value="Envoyer"> -->
+        <button class="ui blue button" type="submit">Envoyer</button>
+    </form>
+{% endblock %}
+
+</body>
+
+</html>

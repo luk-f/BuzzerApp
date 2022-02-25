@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <head>
+        <script src="/static/jquery-3.6.0.min.js"></script>  
+        <script src="/static/socket.io.min.js"></script>  
+        <link href="/static/bootstrap.min.css" rel="stylesheet">
+	
+        <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous"> -->
+        <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script> -->
+        
+        <script>
+
+            var OKAY_TO_CLICK = false;
+
+            $(document).ready(function() {
+
+    
+                var sound1 = new Audio("/static/sounds/goes-without-saying-608.mp3");
+                var sound2 = new Audio("/static/sounds/hasty-ba-dum-tss-615.mp3");
+                var sound3 = new Audio("/static/sounds/pristine-609.mp3");
+                var sound4 = new Audio("/static/sounds/swiftly-610.mp3");
+                var sound5 = new Audio("/static/sounds/that-was-quick-606.mp3");
+                
+                var socket = io.connect('http://{{ ip_server }}:5000');
+
+                socket.on('connect', function() {
+                    socket.send('User has connected!');
+                });
+
+                socket.on('message', function(msg) {
+                    // $("#messages").append('<li>'+msg+'</li>');
+                    const date = new Date(Date.now());
+                    var current_date = date.getTime()
+                    console.log('Received message : ', msg['user_name'], 
+                        msg['team_color'], msg['cmd_root'], current_date
+                    );
+
+                    var current_hours = ("0" + date.getHours()).slice(-2);
+                    var current_mins = ("0" + date.getMinutes()).slice(-2);
+                    var current_secs = ("0" + date.getSeconds()).slice(-2);
+                    var current_millisecs = ("00" + date.getMilliseconds()).slice(-3);
+
+                    newClick(msg['user_name'] + " " + current_hours + "h" +
+                        current_mins + "m " + current_secs + ":" + 
+                        current_millisecs
+                    );
+
+                    var user_name = msg['user_name'];
+                    var team_color = msg['team_color'];
+                    var cmd_root = parseInt(msg['cmd_root']);
+
+                    if (team_color == 'white') {
+                        console.log('its root !');
+                        if (cmd_root == 0){
+                            changeColor('yellow', null);
+                        }
+                        else {
+                            changeColor('white', null);
+                        }
+                    }
+                    else if (OKAY_TO_CLICK == true) {
+                        OKAY_TO_CLICK = false;
+                        justBuzz(team_color, user_name);
+                        makeSound(team_color);
+                    }
+                });
+
+            });
+
+            function makeSound(team_color) {
+                if (team_color == "Aqua") {
+                    sound1.play();
+                }
+                else if (team_color == "green") {
+                    sound2.play();
+                }
+                else if (team_color == "red") {
+                    sound3.play();
+                }
+                else if (team_color == "Fuchsia") {
+                    sound4.play();
+                }
+            }
+
+            function justBuzz(team_color, name) {
+                console.log('its ' + name + ' !');
+                document.getElementById('instruction').innerHTML = "Buzzé par " + name + " !";
+                changeColor(team_color, null);
+                setTimeout(function(){
+                    changeColor('white', null);
+                }, 3000);
+            }
+
+            function changeColor(color, name) { 
+                console.log("first line changeColor");
+                if (color == 'yellow') {
+                    OKAY_TO_CLICK = true;
+                    document.getElementById('instruction').innerHTML = "BUZZ !";
+                }
+                if (color == 'white') {
+                    OKAY_TO_CLICK = false;
+                    document.getElementById('instruction').innerHTML = "Wait for it";
+                }
+                document.body.style.background = color; 
+            }
+
+            function removeListClick(listItems, numberToDelete) {
+                for (let i = 0; i < numberToDelete; i++) {
+                    var last = listItems[listItems.length - 1];
+                    last.parentNode.removeChild(last);
+                }
+            }
+
+            function newClick(inputValue) {
+                var li = document.createElement("li");
+                var t = document.createTextNode(inputValue);
+                li.appendChild(t);
+                var myULElt = document.getElementById("myUL");
+                myULElt.insertBefore(li, myULElt.firstChild);
+
+                var liList = document.getElementById("myUL").getElementsByTagName("li");
+
+                // delete x childs if list have y childs
+                if (liList.length > 110) {
+                    removeListClick(liList, 20);
+                }
+            }
+            
+            function sleep(ms) {
+                return new Promise(resolve => setTimeout(resolve, ms));
+            }
+        </script>  
+    </head>  
+    
+    <title>Tableau</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <body style = "text-align:center;"> 
+        
+        <font id="instruction" size="+3">Wait for it</font> 
+        <font id="name" size="+1"> </font> 
+        
+        <p><b>Cliquez sur le bouton pour changer la couleur :</b></p> 
+        
+        <button onclick = "changeColor('Aqua', null);">Équipe 1</button>
+        <button onclick = "changeColor('green', null);">Équipe 2</button> 
+        <button onclick = "changeColor('red', null);">Équipe 3</button>
+        <button onclick = "changeColor('Fuchsia', null);">Équipe 4</button>
+        <button onclick = "changeColor('yellow', null);">Buzz on</button> 
+        <button onclick = "changeColor('white', null);">Buzz off</button> 
+          
+        <ul id="myUL">
+        </ul> 
+    </body>  
+</html>

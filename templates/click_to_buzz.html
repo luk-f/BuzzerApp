@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Buzzer</title>
+	<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+	<!-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.8/socket.io.min.js"></script> -->
+
+	<script src="/static/jquery-3.6.0.min.js"></script>  
+	<script src="/static/socket.io.min.js"></script>  
+	<link href="/static/bootstrap.min.css" rel="stylesheet">
+	
+	<!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous"> -->
+ 
+	<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script> -->
+</head>
+<body style = "text-align:center;">
+
+<script type="text/javascript">
+
+	$(document).ready(function() {
+
+		var socket = io.connect('http://{{ ip_server }}:5000');
+
+		var user_name = '{{ user_name }}';
+		var team_color = '{{ team_color }}';
+		var cmd_root = '{{ cmd_root }}';
+
+		$('#sendbutton').on('click', function() {
+			socket.send({user_name: user_name, 
+				team_color: team_color, 
+				cmd_root: cmd_root});
+			$('#myMessage').val('');
+		});
+
+	});
+  
+</script>
+
+<button class="favorite styled" type="button" id="sendbutton" style="height:100px;width:200px">
+    Click to buzz !
+</button>
+
+</body>
+</html>
